@@ -19,7 +19,7 @@ class BinaryObject:
     # --------------- Decoder ---------------
 
     def getString(self, position, length):
-        return self.data[:position][-length:]
+        return self.data[:position + length][-length:]
 
     def getByte(self, position):
         return int.from_bytes(self.data[:position + 1][-1:], byteorder=self.endianness)
