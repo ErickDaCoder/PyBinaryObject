@@ -9,7 +9,6 @@ import struct  # For the float converter
 import pickle  # For the dictionary dumper
 import zlib  # For the compressor
 
-
 class BinaryObject:
     def __init__(self, indata, endianness):
         self.data = indata
