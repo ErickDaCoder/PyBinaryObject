@@ -1,3 +1,4 @@
+import binaryobject
 def main__byteLongStringCursor1():
     binobj = BinaryObject(b"", "little")
     binobj.appendByte(23)
