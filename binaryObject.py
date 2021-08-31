@@ -121,3 +121,4 @@ class BinaryObject:
     
     def removeBytes(self, position, nBytes):
         self.data = self.data[:position] + self.data[position+nBytes:]
+        self.cursor -= nBytes
