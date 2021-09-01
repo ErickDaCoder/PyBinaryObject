@@ -18,7 +18,7 @@ class BinaryObject:
     # --- Conditions:
     
     def bankExists(self, bankName):
-        return self.banks.has_key(bankName)
+        return bankName in self.banks
     
     # --- Actions:
     
