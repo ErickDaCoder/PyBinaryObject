@@ -4,7 +4,6 @@
 # Entertainment for Clickteam Fusion.                             #
 #-----------------------------------------------------------------#
 
-
 import struct # For the float converter
 import pickle # For the dictionary dumper
 import zlib # For the compressor (this is the original compression module used by the Clickteam Fusion variant)
@@ -16,28 +15,13 @@ class BinaryObject:
         self.banks = {}
         self.cursor = 0
     
-    # --------------- Decoder ---------------
+    # --- Conditions:
     
-    def getString(self, position, length):
-        return self.data[:position + length][-length:]
+    def bankExists(self, bankName):
+        return self.banks.has_key(bankName)
     
-    def getByte(self, position):
-        return int.from_bytes(self.data[:position + 1][-1:], byteorder = self.endianness)
+    # --- Actions:
     
-    def getShort(self, position):
-        return int.from_bytes(self.data[:position + 2][-2:], byteorder = self.endianness)
-    
-    def getLong(self, position):
-        return int.from_bytes(self.data[:position + 4][-4:], byteorder = self.endianness)
-    
-    def getFloat(self, position):
-        return struct.unpack(( (">" if self.endianness == "big" else "<") + "f"), self.data[:position + 4][-4:])[0]
-    
-    def loadFromBank(self, bankname):
-        self.data = self.banks[bankname]
-    
-    # --------------- Encoder ---------------
-    # * - Converters
     def convertByte(self, byteValue):
         return byteValue.to_bytes(1, byteorder = self.endianness)
     
@@ -49,8 +33,6 @@ class BinaryObject:
     
     def convertFloat(self, floatValue):
         return struct.pack(( (">" if self.endianness == "big" else "<") + "f"), floatValue )
-    
-    # * - Appenders, inserters, and saver
     
     def insertStringAt(self, position, string):
         self.data = self.data[:position] + string.encode("ascii") + self.data[position:]
@@ -92,10 +74,11 @@ class BinaryObject:
         self.data += self.convertFloat(floatValue)
         self.cursor += 4
     
+    def loadFromBank(self, bankname):
+        self.data = self.banks[bankname]
+    
     def saveToBank(self, bankname):
         self.banks[bankname] = self.data
-    
-    # --------------- Miscellaneous ---------------
     
     def removeBank(self, bankName):
         del self.banks[bankName]
@@ -122,3 +105,20 @@ class BinaryObject:
     def removeBytes(self, position, nBytes):
         self.data = self.data[:position] + self.data[position+nBytes:]
         self.cursor -= nBytes
+    
+    # --- Expressions:
+    
+    def getString(self, position, length):
+        return self.data[:position + length][-length:]
+    
+    def getByte(self, position):
+        return int.from_bytes(self.data[:position + 1][-1:], byteorder = self.endianness)
+    
+    def getShort(self, position):
+        return int.from_bytes(self.data[:position + 2][-2:], byteorder = self.endianness)
+    
+    def getLong(self, position):
+        return int.from_bytes(self.data[:position + 4][-4:], byteorder = self.endianness)
+    
+    def getFloat(self, position):
+        return struct.unpack(( (">" if self.endianness == "big" else "<") + "f"), self.data[:position + 4][-4:])[0]
