@@ -39,8 +39,17 @@ def main__loadExample():
     print(b.data)
     print(b.getString(1, b.getByte(0) ))
 
+def main__conditional():
+    b = BinaryObject(b"", "little")
+    b.appendByte(120)
+    b.appendByte(38)
+    b.saveToBank("MyBank")
+    if b.bankExists("MyBank"):
+        print("Bank exists.")
+
 if __name__ == "__main__":
     # main__byteLongStringCursor1() # Example program that demonstrates the appending feature, insertion feature, cursor feature, and the reading feature.
     #main_bankExample() # Example program that demonstrates the bank feature, as well as the bank dumping feature.
-    main__saveExample()
-    main__loadExample()
+    #main__saveExample()
+    #main__loadExample()
+    #main__conditional()
