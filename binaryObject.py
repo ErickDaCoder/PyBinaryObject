@@ -97,7 +97,7 @@ class BinaryObject:
     def resetBanks(self):
         self.banks = {}
     
-    def compressData(self, compressLevel):
+    def compressData(self, compressLevel=5):
         self.data = zlib.compress(self.data, level=compressLevel)
     
     def decompressData(self):
