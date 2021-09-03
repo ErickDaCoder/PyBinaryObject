@@ -6,7 +6,8 @@
 from struct import pack, unpack # For the float converter
 from pickle import dumps, loads # For the dictionary dumper
 from zlib import compress, decompress# For the compressor (this is the original compression module used by the Clickteam Fusion variant)
-from hashlib import md5 # For the MD5 hash function.
+from hashlib import md5, sha256 # For the MD5 hash function. SHA512 is a new feature that was not present in the original.
+from base64 import b64decode, b64encode
 
 class BinaryObject:
     def __init__(self, indata, endianness):
@@ -106,6 +107,12 @@ class BinaryObject:
         self.data = self.data[:position] + self.data[position+nBytes:]
         self.cursor -= nBytes
     
+    def base64EncodeData(self):
+        self.data = b64encode(self.data)
+    
+    def base64DecodeData(self):
+        self.data = b64decode(self.data)
+    
     # --- Expressions:
     
     def getByteSize(self):
@@ -140,3 +147,6 @@ class BinaryObject:
     
     def getMD5Signature(self):
         return md5(self.data).hexdigest()
+    
+    def getSHA256Hash(self):
+        return sha256(self.data).hexdigest()
