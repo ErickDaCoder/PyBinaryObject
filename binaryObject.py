@@ -3,10 +3,9 @@
 # originally a blind port of the Binary Object made by Third Eye  #
 # Entertainment for Clickteam Fusion.                             #
 #-----------------------------------------------------------------#
-
-import struct # For the float converter
-import pickle # For the dictionary dumper
-import zlib # For the compressor (this is the original compression module used by the Clickteam Fusion variant)
+from struct import pack, unpack # For the float converter
+from pickle import dumps, loads # For the dictionary dumper
+from zlib import compress, decompress# For the compressor (this is the original compression module used by the Clickteam Fusion variant)
 from hashlib import md5 # For the MD5 hash function.
 
 class BinaryObject:
@@ -32,8 +31,8 @@ class BinaryObject:
     def convertLong(self, longValue):
         return longValue.to_bytes(4, byteorder = self.endianness)
     
-    def convertFloat(self, floatValue):
-        return struct.pack(( (">" if self.endianness == "big" else "<") + "f"), floatValue )
+    def convertFloat(self, floatValue): # Uses struct.pack
+        return pack(( (">" if self.endianness == "big" else "<") + "f"), floatValue )
     
     def insertStringAt(self, position, string):
         self.data = self.data[:position] + string.encode("ascii") + self.data[position:]
@@ -84,11 +83,11 @@ class BinaryObject:
     def removeBank(self, bankName):
         del self.banks[bankName]
     
-    def dumpBanks(self):
-        return pickle.dumps(self.banks)
+    def dumpBanks(self): # Uses pickle.dumps
+        return dumps(self.banks)
     
-    def loadDumpedBanks(self, pickledBanks):
-        self.banks = pickle.loads(pickledBanks)
+    def loadDumpedBanks(self, dumpedBanks): # Uses pickle.loads
+        self.banks = loads(dumpedBanks)
     
     def resetData(self):
         self.data = b""
@@ -97,11 +96,11 @@ class BinaryObject:
     def resetBanks(self):
         self.banks = {}
     
-    def compressData(self, compressLevel=5):
-        self.data = zlib.compress(self.data, level=compressLevel)
+    def compressData(self, compressLevel=5): # Uses zlib.compress
+        self.data = compress(self.data, level=compressLevel)
     
-    def decompressData(self):
-        self.data = zlib.decompress(self.data)
+    def decompressData(self): # Uses zlib.decompress
+        self.data = decompress(self.data)
     
     def removeBytes(self, position, nBytes):
         self.data = self.data[:position] + self.data[position+nBytes:]
@@ -133,8 +132,8 @@ class BinaryObject:
     def getLong(self, position):
         return int.from_bytes(self.data[:position + 4][-4:], byteorder = self.endianness)
     
-    def getFloat(self, position):
-        return struct.unpack(( (">" if self.endianness == "big" else "<") + "f"), self.data[:position + 4][-4:])[0]
+    def getFloat(self, position): # Uses struct.unpack
+        return unpack(( (">" if self.endianness == "big" else "<") + "f"), self.data[:position + 4][-4:])[0]
     
     def getPointerToData(self):
         return hex(id(self.data))
