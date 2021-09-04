@@ -22,7 +22,7 @@ def main__bankExample():
     print(binobj.banks)
     dumped = binobj.dumpBanks()
     print(dumped)
-    print(pickle.loads(dumped))
+    print(binobj.loadDumpedBanks(dumped))
 
 def main__saveExample():
     b = BinaryObject(b"", "little")
@@ -51,18 +51,26 @@ def main__dataAddress():
     b = BinaryObject(b"", "little")
     print(b.getPointerToData())
 
-def main__hash():
+def main__md5hash():
     b = BinaryObject(b"", "little")
     b.appendLong(128183)
     b.appendLong(239818)
     b.appendLong(287631)
     print(b.getMD5Signature())
 
+def main__sha512hash():
+    b = BinaryObject(b"", "little")
+    b.appendLong(128183)
+    b.appendLong(239818)
+    b.appendLong(287631)
+    print(b.getSHA256Hash())
+
 if __name__ == "__main__":
-    # main__byteLongStringCursor1() # Example program that demonstrates the appending feature, insertion feature, cursor feature, and the reading feature.
-    # main_bankExample() # Example program that demonstrates the bank feature, as well as the bank dumping feature.
-    # main__saveExample()
-    # main__loadExample()
-    # main__conditional()
-    # main__dataAddress()
-    main__hash()
+    main__byteLongStringCursor1() # Example program that demonstrates the appending feature, insertion feature, cursor feature, and the reading feature.
+    main__bankExample() # Example program that demonstrates the bank feature, as well as the bank dumping feature.
+    main__saveExample()
+    main__loadExample()
+    main__conditional()
+    main__dataAddress()
+    main__md5hash()
+    main__sha512hash()
