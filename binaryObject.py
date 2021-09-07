@@ -3,7 +3,6 @@
 # originally a blind port of the Binary Object made by Third Eye  #
 # Entertainment for Clickteam Fusion.                             #
 #-----------------------------------------------------------------#
-from struct import pack, unpack # For the float converter
 from pickle import dumps, loads # For the dictionary dumper
 from zlib import compress, decompress # For the compressor (this is the original compression module used by the Clickteam Fusion variant)
 from hashlib import md5, sha256 # For the MD5 hash function. SHA512 is a new feature that was not present in the original.
@@ -32,9 +31,6 @@ class BinaryObject:
     def convertLong(self, longValue):
         return (longValue).to_bytes(4, byteorder = self.endianness)
     
-    #def convertFloat(self, floatValue): # Uses struct.pack
-    #    return pack(( (">" if self.endianness == "big" else "<") + "f"), floatValue )
-    
     def insertStringAt(self, position, string):
         self.data = self.data[:position] + string.encode("ascii") + self.data[position:]
         self.cursor += len(string)
@@ -51,10 +47,6 @@ class BinaryObject:
         self.data = self.data[:position] + self.convertLong(longValue) + self.data[position:]
         self.cursor += 4
     
-    #def insertFloatAt(self, position, floatValue):
-    #    self.data = self.data[:position] + self.convertFloat(floatValue) + self.data[position:]
-    #    self.cursor += 4
-    
     def appendString(self, string):
         self.data += (str.encode(string, "ascii"))
         self.cursor += len(string)
@@ -70,10 +62,6 @@ class BinaryObject:
     def appendLong(self, longValue):
         self.data += self.convertLong(longValue)
         self.cursor += 4
-    
-    #def appendFloat(self, floatValue):
-    #    self.data += self.convertFloat(floatValue)
-    #    self.cursor += 4
     
     def loadFromBank(self, bankname):
         self.data = self.banks[bankname]
@@ -124,9 +112,6 @@ class BinaryObject:
     def getLongSize(self):
         return 4
     
-    #def getFloatSize(self):
-    #    return 4
-    
     def getString(self, position, length):
         return self.data[:position + length][-length:]
     
@@ -138,9 +123,6 @@ class BinaryObject:
     
     def getLong(self, position):
         return int.from_bytes(self.data[:position + 4][-4:], byteorder = self.endianness)
-    
-    #def getFloat(self, position): # Uses struct.unpack
-    #    return unpack(( (">" if self.endianness == "big" else "<") + "f"), self.data[:position + 4][-4:])[0]
     
     def getPointerToData(self):
         return hex(id(self.data))
