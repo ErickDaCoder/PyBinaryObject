@@ -65,6 +65,25 @@ def main__sha512hash():
     b.appendLong(287631)
     print(b.getSHA256Hash())
 
+def main__alldt():
+    b = BinaryObject(b"", "little")
+    b.appendString("Hola!")
+    b.appendByte(52)
+    b.appendShort(520)
+    b.appendLong(5200)
+    #b.appendFloat(2.12)
+    print(b.data)
+    b.cursor = 0
+    print(b.getString(b.cursor, 5))
+    b.cursor += 5
+    print(b.getByte(b.cursor))
+    b.cursor += b.getByteSize()
+    print(b.getShort(b.cursor))
+    b.cursor += b.getShortSize()
+    print(b.getLong(b.cursor))
+    b.cursor += b.getLongSize()
+    print(b.getFloat(b.cursor))
+
 if __name__ == "__main__":
     main__byteLongStringCursor1() # Example program that demonstrates the appending feature, insertion feature, cursor feature, and the reading feature.
     main__bankExample() # Example program that demonstrates the bank feature, as well as the bank dumping feature.
@@ -74,3 +93,4 @@ if __name__ == "__main__":
     main__dataAddress()
     main__md5hash()
     main__sha512hash()
+    main__alldt()
