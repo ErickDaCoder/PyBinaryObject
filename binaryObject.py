@@ -5,9 +5,9 @@
 #-----------------------------------------------------------------#
 from struct import pack, unpack # For the float converter
 from pickle import dumps, loads # For the dictionary dumper
-from zlib import compress, decompress# For the compressor (this is the original compression module used by the Clickteam Fusion variant)
+from zlib import compress, decompress # For the compressor (this is the original compression module used by the Clickteam Fusion variant)
 from hashlib import md5, sha256 # For the MD5 hash function. SHA512 is a new feature that was not present in the original.
-from base64 import b64decode, b64encode
+from base64 import b64decode, b64encode # For the base64 encoder and decoder.
 
 class BinaryObject:
     def __init__(self, indata, endianness):
@@ -24,16 +24,16 @@ class BinaryObject:
     # --- Actions:
     
     def convertByte(self, byteValue):
-        return byteValue.to_bytes(1, byteorder = self.endianness)
+        return (byteValue).to_bytes(1, byteorder = self.endianness)
     
     def convertShort(self, shortValue):
-        return shortValue.to_bytes(2, byteorder = self.endianness)
+        return (shortValue).to_bytes(2, byteorder = self.endianness)
     
     def convertLong(self, longValue):
-        return longValue.to_bytes(4, byteorder = self.endianness)
+        return (longValue).to_bytes(4, byteorder = self.endianness)
     
-    def convertFloat(self, floatValue): # Uses struct.pack
-        return pack(( (">" if self.endianness == "big" else "<") + "f"), floatValue )
+    #def convertFloat(self, floatValue): # Uses struct.pack
+    #    return pack(( (">" if self.endianness == "big" else "<") + "f"), floatValue )
     
     def insertStringAt(self, position, string):
         self.data = self.data[:position] + string.encode("ascii") + self.data[position:]
@@ -51,9 +51,9 @@ class BinaryObject:
         self.data = self.data[:position] + self.convertLong(longValue) + self.data[position:]
         self.cursor += 4
     
-    def insertFloatAt(self, position, floatValue):
-        self.data = self.data[:position] + self.convertFloat(floatValue) + self.data[position:]
-        self.cursor += 4
+    #def insertFloatAt(self, position, floatValue):
+    #    self.data = self.data[:position] + self.convertFloat(floatValue) + self.data[position:]
+    #    self.cursor += 4
     
     def appendString(self, string):
         self.data += (str.encode(string, "ascii"))
@@ -71,9 +71,9 @@ class BinaryObject:
         self.data += self.convertLong(longValue)
         self.cursor += 4
     
-    def appendFloat(self, floatValue):
-        self.data += self.convertFloat(floatValue)
-        self.cursor += 4
+    #def appendFloat(self, floatValue):
+    #    self.data += self.convertFloat(floatValue)
+    #    self.cursor += 4
     
     def loadFromBank(self, bankname):
         self.data = self.banks[bankname]
@@ -107,10 +107,10 @@ class BinaryObject:
         self.data = self.data[:position] + self.data[position+nBytes:]
         self.cursor -= nBytes
     
-    def base64EncodeData(self):
+    def base64EncodeData(self): # Uses base64.b64encode
         self.data = b64encode(self.data)
     
-    def base64DecodeData(self):
+    def base64DecodeData(self): # Uses base64.b64decode
         self.data = b64decode(self.data)
     
     # --- Expressions:
@@ -124,8 +124,8 @@ class BinaryObject:
     def getLongSize(self):
         return 4
     
-    def getFloatSize(self):
-        return 4
+    #def getFloatSize(self):
+    #    return 4
     
     def getString(self, position, length):
         return self.data[:position + length][-length:]
@@ -139,14 +139,14 @@ class BinaryObject:
     def getLong(self, position):
         return int.from_bytes(self.data[:position + 4][-4:], byteorder = self.endianness)
     
-    def getFloat(self, position): # Uses struct.unpack
-        return unpack(( (">" if self.endianness == "big" else "<") + "f"), self.data[:position + 4][-4:])[0]
+    #def getFloat(self, position): # Uses struct.unpack
+    #    return unpack(( (">" if self.endianness == "big" else "<") + "f"), self.data[:position + 4][-4:])[0]
     
     def getPointerToData(self):
         return hex(id(self.data))
     
-    def getMD5Signature(self):
+    def getMD5Signature(self): # Uses hashlib.md5
         return md5(self.data).hexdigest()
     
-    def getSHA256Hash(self):
+    def getSHA256Hash(self): # Uses hashlib.sha256
         return sha256(self.data).hexdigest()
