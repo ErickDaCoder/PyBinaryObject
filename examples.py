@@ -71,7 +71,6 @@ def main__alldt():
     b.appendByte(52)
     b.appendShort(520)
     b.appendLong(5200)
-    #b.appendFloat(2.12)
     print(b.data)
     b.cursor = 0
     print(b.getString(b.cursor, 5))
@@ -81,6 +80,15 @@ def main__alldt():
     print(b.getShort(b.cursor))
     b.cursor += b.getShortSize()
     print(b.getLong(b.cursor))
+
+def main__removeBytes():
+    b = BinaryObject(b"", "little")
+    b.appendString("This ?IS_ a sentence!")
+    b.insertLongAt(0, 65536)
+    b.appendLong(65536)
+    print(b.data)
+    b.removeBytes(9, 3)
+    print(b.data)
 
 if __name__ == "__main__":
     main__byteLongStringCursor1() # Example program that demonstrates the appending feature, insertion feature, cursor feature, and the reading feature.
@@ -92,3 +100,4 @@ if __name__ == "__main__":
     main__md5hash()
     main__sha512hash()
     main__alldt()
+    main__removeBytes()
