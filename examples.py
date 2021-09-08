@@ -81,8 +81,6 @@ def main__alldt():
     print(b.getShort(b.cursor))
     b.cursor += b.getShortSize()
     print(b.getLong(b.cursor))
-    b.cursor += b.getLongSize()
-    print(b.getFloat(b.cursor))
 
 if __name__ == "__main__":
     main__byteLongStringCursor1() # Example program that demonstrates the appending feature, insertion feature, cursor feature, and the reading feature.
