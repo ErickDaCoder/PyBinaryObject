@@ -9,7 +9,7 @@ from hashlib import md5, sha256 # For the MD5 hash function. SHA512 is a new fea
 from base64 import b64decode, b64encode # For the base64 encoder and decoder.
 
 class BinaryObject:
-    def __init__(self, indata, endianness):
+    def __init__(self, indata, endianness="little"):
         self.data = indata
         self.endianness = endianness
         self.banks = {}
