@@ -23,13 +23,13 @@ class BinaryObject:
     # --- Actions:
     
     def convertByte(self, byteValue):
-        return (byteValue).to_bytes(1, byteorder = self.endianness)
+        return byteValue.to_bytes(1, byteorder = self.endianness)
     
     def convertShort(self, shortValue):
-        return (shortValue).to_bytes(2, byteorder = self.endianness)
+        return shortValue.to_bytes(2, byteorder = self.endianness)
     
     def convertLong(self, longValue):
-        return (longValue).to_bytes(4, byteorder = self.endianness)
+        return longValue.to_bytes(4, byteorder = self.endianness)
     
     def insertStringAt(self, position, string):
         self.data = self.data[:position] + string.encode("ascii") + self.data[position:]
@@ -102,16 +102,18 @@ class BinaryObject:
         self.data = b64decode(self.data)
     
     # --- Expressions:
-    
-    def getByteSize(self):
+    @staticmethod
+    def getByteSize():
         return 1
-    
-    def getShortSize(self):
+
+    @staticmethod
+    def getShortSize():
         return 2
-    
-    def getLongSize(self):
+
+    @staticmethod
+    def getLongSize():
         return 4
-    
+
     def getString(self, position, length):
         return self.data[:position + length][-length:]
     
